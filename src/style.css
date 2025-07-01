@@ -45,13 +45,24 @@ img {
   z-index: 1;
 }
 .hero-title {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2.1rem, 7vw, 3.5rem); /* Ajuste para responsividade real */
   color: var(--secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
   opacity: 0;
   transform: translateY(-40px);
   animation: slideDown 1s ease-out forwards 0.3s;
+  word-break: break-word;
+  line-height: 1.1;
+  padding: 0 4vw;
+}
+
+/* Melhor ajuste para telas pequenas */
+@media (max-width: 500px) {
+  .hero-title {
+    font-size: 2rem;
+    padding: 0 2vw;
+  }
 }
 
 /* ========= SEÇÕES ========= */
