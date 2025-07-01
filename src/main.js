@@ -14,7 +14,7 @@ const revealSections = new IntersectionObserver((entries, observer) => {
 }, { threshold: 0.15 });
 sections.forEach(section => revealSections.observe(section));
 
-// Observer para elementos com classe .reveal (cards, projetos)
+
 const revealElements = document.querySelectorAll('.reveal');
 const revealGeneric = new IntersectionObserver((entries, observer) => {
   entries.forEach(entry => {
@@ -33,32 +33,49 @@ window.addEventListener('scroll', () => {
   hero.style.backgroundPositionY = offset * 0.5 + 'px';
 });
 
-// Carrossel de projetos
-const slide = document.querySelector('.carousel-slide');
-const cards = document.querySelectorAll('.carousel-slide .project-card');
-const prevBtn = document.querySelector('.carousel-btn.prev');
-const nextBtn = document.querySelector('.carousel-btn.next');
-let currentIndex = 0;
 
-function updateCarousel() {
-  const cardWidth = cards[0].offsetWidth;
-  const containerWidth = slide.parentElement.offsetWidth;
-  // Centraliza o card ativo
-  const offset = (cardWidth * currentIndex) - ((containerWidth - cardWidth) / 2);
-  slide.style.transform = `translateX(-${offset}px)`;
+
+// Carrossel Moderno
+const carousel = document.querySelector('.carousel-modern');
+if (carousel) {
+  const items = carousel.querySelectorAll('.carousel-item');
+  const leftBtn = carousel.querySelector('.carousel-arrow.left');
+  const rightBtn = carousel.querySelector('.carousel-arrow.right');
+  const indicators = carousel.querySelector('.carousel-indicators');
+  let current = 0;
+
+  // Cria os indicadores
+  items.forEach((_, idx) => {
+    const btn = document.createElement('button');
+    btn.setAttribute('aria-label', `Ir para slide ${idx + 1}`);
+    if (idx === 0) btn.classList.add('active');
+    btn.addEventListener('click', () => show(idx));
+    indicators.appendChild(btn);
+  });
+
+  function show(idx) {
+    items.forEach((item, i) => item.classList.toggle('active', i === idx));
+    Array.from(indicators.children).forEach((b, i) => b.classList.toggle('active', i === idx));
+    current = idx;
+  }
+
+  leftBtn.addEventListener('click', () => {
+    show((current === 0) ? items.length - 1 : current - 1);
+  });
+  rightBtn.addEventListener('click', () => {
+    show((current === items.length - 1) ? 0 : current + 1);
+  });
+
+  // Swipe para mobile
+  let startX = null;
+  carousel.querySelector('.carousel-images').addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+  carousel.querySelector('.carousel-images').addEventListener('touchend', e => {
+    if (startX === null) return;
+    let endX = e.changedTouches[0].clientX;
+    if (endX - startX > 40) leftBtn.click();
+    else if (startX - endX > 40) rightBtn.click();
+    startX = null;
+  });
 }
-
-prevBtn.addEventListener('click', () => {
-  currentIndex = (currentIndex === 0) ? cards.length - 1 : currentIndex - 1;
-  updateCarousel();
-});
-
-nextBtn.addEventListener('click', () => {
-  currentIndex = (currentIndex === cards.length - 1) ? 0 : currentIndex + 1;
-  updateCarousel();
-});
-
-// Responsivo: atualiza ao redimensionar
-window.addEventListener('resize', updateCarousel);
-
-updateCarousel();
