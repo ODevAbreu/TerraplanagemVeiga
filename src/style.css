@@ -48,7 +48,7 @@ img {
   font-size: clamp(2.5rem, 6vw, 4rem);
   color: var(--secondary);
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 1px;
   opacity: 0;
   transform: translateY(-40px);
   animation: slideDown 1s ease-out forwards 0.3s;
